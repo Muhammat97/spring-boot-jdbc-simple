@@ -24,13 +24,14 @@ public class CustomerModel {
 	private String custUuid;
 
 	@NotBlank(message = "E006|fullName")
+	@Size(min = 3, message = "E007|fullName|{min}")
 	@Size(max = 60, message = "E008|fullName|{max}")
 	private String fullName;
 
 	@Size(max = 20, message = "E008|identityNum|{max}")
 	private String identityNum;
 
-	@Past(message = "E014|birthDate|today")
+	@Past(message = "E014|birthDate|now")
 	@JsonDeserialize(using = CustomDateDeserializer.class)
 	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date birthDate;

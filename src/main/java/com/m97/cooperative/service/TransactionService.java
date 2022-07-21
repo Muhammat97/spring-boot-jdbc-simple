@@ -172,7 +172,8 @@ public class TransactionService {
 								: amount);
 				customerAccountModel.setUpdatedBy(model.getCreatedBy());
 
-				int rowsAffected = customerAccountRepository.updateBalanceById(100, customerAccountModel);
+				int rowsAffected = customerAccountRepository.updateBalanceById(customerAccountModel.getCustAcctId(),
+						customerAccountModel);
 				if (rowsAffected < 1)
 					throw new CustomRuntimeException("E002");
 			}

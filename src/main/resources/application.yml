@@ -15,7 +15,7 @@ map-collection:
   message:
     S001: "200|Success!"
     S002: "200|Data not found."
-    S003: "201|Data successfully added."
+    S003: "200|Data successfully added."
     S004: "200|Data successfully updated."
     E001: "500|Error occured on service."
     E002: "500|Error occured on resource."
@@ -23,14 +23,14 @@ map-collection:
     E004: "401|Unauthorized."
     E005: "400|{args1} - {args2} already exist."
     E006: "400|{args1} is required."
-    E007: "400|{args1} not less than {args2} characters."
-    E008: "400|{args1} not greater than {args2} characters."
+    E007: "400|{args1} cannot be less than {args2} characters."
+    E008: "400|{args1} cannot be greater than {args2} characters."
     E009: "400|{args1} must be {args2} characters long."
     E010: "400|{args1} can only be filled with numbers."
     E011: "400|{args1} can only be filled with {args2}."
     E012: "400|{args1} value must have format {args2}."
     E013: "400|{args1} value must in range of {args2} - {args3}."
-    E014: "400|{args1} no later than {args2}."
+    E014: "400|{args1} cannot be later than {args2}."
 
 logging:
   level:

@@ -1,0 +1,748 @@
+{
+	"info": {
+		"_postman_id": "9c6dadbc-f521-477b-a275-d435f01724d8",
+		"name": "Cooperative",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2450889"
+	},
+	"item": [
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "Get All Customer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Code is S001\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.code).to.eql(\"S001\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}",
+							"host": [
+								"{{baseUrl}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Entry Customer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.test(\"Code is S003\", function () {",
+									"    pm.expect(jsonData.code).to.eql(\"S003\");",
+									"});",
+									"pm.test(\"Output has length 36\", function () {",
+									"    pm.expect(jsonData.output).to.length(36);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Wendy\",\n    \"birthDate\": \"1995-07-21\",\n    \"address\": \"Kp. Cikedokan\",\n    \"neighbourhoodNum\": \"03\",\n    \"hamletNum\": \"10\",\n    \"zipCode\": \"17530\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}",
+							"host": [
+								"{{baseUrl}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Negative Customer",
+			"item": [
+				{
+					"name": "Entry Customer Name Required",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test(\"Code is E006\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.code).to.eql(\"E006\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"birthDate\": \"1995-07-21\",\n    \"address\": \"Kp. Cikedokan\",\n    \"neighbourhoodNum\": \"03\",\n    \"hamletNum\": \"10\",\n    \"zipCode\": \"17530\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}",
+							"host": [
+								"{{baseUrl}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Entry Customer Name Min 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test(\"Code is E007\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.code).to.eql(\"E007\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"We\",\n    \"birthDate\": \"1995-07-21\",\n    \"address\": \"Kp. Cikedokan\",\n    \"neighbourhoodNum\": \"03\",\n    \"hamletNum\": \"10\",\n    \"zipCode\": \"17530\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}",
+							"host": [
+								"{{baseUrl}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Entry Customer Name Max 60",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test(\"Code is E008\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.code).to.eql(\"E008\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Wendy is going to school wendy is going to school wendy is going to school\",\n    \"birthDate\": \"1995-07-21\",\n    \"address\": \"Kp. Cikedokan\",\n    \"neighbourhoodNum\": \"03\",\n    \"hamletNum\": \"10\",\n    \"zipCode\": \"17530\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}",
+							"host": [
+								"{{baseUrl}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Entry Customer Birth Date Future",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test(\"Code is E014\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.code).to.eql(\"E014\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Wendy\",\n    \"birthDate\": \"2023-07-21\",\n    \"address\": \"Kp. Cikedokan\",\n    \"neighbourhoodNum\": \"03\",\n    \"hamletNum\": \"10\",\n    \"zipCode\": \"17530\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}",
+							"host": [
+								"{{baseUrl}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Entry Customer Birth Date Format",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test(\"Code is E012\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.code).to.eql(\"E012\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Wendy\",\n    \"birthDate\": \"21111996\",\n    \"address\": \"Kp. Cikedokan\",\n    \"neighbourhoodNum\": \"03\",\n    \"hamletNum\": \"10\",\n    \"zipCode\": \"17530\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}",
+							"host": [
+								"{{baseUrl}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Entry Customer Hamlet Num Digit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test(\"Code is E010\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.code).to.eql(\"E010\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Wendy\",\n    \"birthDate\": \"1995-07-21\",\n    \"address\": \"Kp. Cikedokan\",\n    \"neighbourhoodNum\": \"03\",\n    \"hamletNum\": \"AA\",\n    \"zipCode\": \"17530\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}",
+							"host": [
+								"{{baseUrl}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Transaction",
+			"item": [
+				{
+					"name": "Get All Transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Code is S001\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.code).to.eql('S001');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/transaction?startDate=2020-09-09&endDate=2022-07-21 ",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"transaction"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2020-09-09"
+								},
+								{
+									"key": "endDate",
+									"value": "2022-07-21 "
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Transaction By Customer UUID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Code is S001\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.code).to.eql('S001');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/491f0164-7cea-40ad-8761-145ec456e923/transaction",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"491f0164-7cea-40ad-8761-145ec456e923",
+								"transaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Entry Transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.test(\"Code is S003\", function () {",
+									"    pm.expect(jsonData.code).to.eql('S003');",
+									"});",
+									"pm.test(\"Output has length 36\", function () {",
+									"    pm.expect(jsonData.output).to.length(36);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tranType\": \"DEPOSIT\",\n    \"tranAmount\": \"10000000\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/025fb2a3-18c5-44fd-8392-4a29257e36e0/transaction",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"025fb2a3-18c5-44fd-8392-4a29257e36e0",
+								"transaction"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Negative Transaction",
+			"item": [
+				{
+					"name": "Get All Transaction Start Date Greater",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test(\"Code is E014\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.code).to.eql('E014');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/transaction?startDate=2022-09-09&endDate=2020-07-21 ",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"transaction"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2022-09-09"
+								},
+								{
+									"key": "endDate",
+									"value": "2020-07-21 "
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Transaction By Customer UUID Not Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"pm.test(\"Code is E003\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.code).to.eql('E003');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/dce32bd3-a3d9-42ca-a481-9ca030073404/transaction",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dce32bd3-a3d9-42ca-a481-9ca030073404",
+								"transaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Entry Transaction Negative Amount",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"var jsonData = pm.response.json();",
+									"pm.test(\"Code is E013\", function () {",
+									"    pm.expect(jsonData.code).to.eql('E013');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tranType\": \"DEPOSIT\",\n    \"tranAmount\": \"-10000000\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/025fb2a3-18c5-44fd-8392-4a29257e36e0/transaction",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"025fb2a3-18c5-44fd-8392-4a29257e36e0",
+								"transaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Entry Transaction Wrong Type",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"var jsonData = pm.response.json();",
+									"pm.test(\"Code is E011\", function () {",
+									"    pm.expect(jsonData.code).to.eql('E011');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tranType\": \"WRONG\",\n    \"tranAmount\": \"10000000\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/025fb2a3-18c5-44fd-8392-4a29257e36e0/transaction",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"025fb2a3-18c5-44fd-8392-4a29257e36e0",
+								"transaction"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "P@ssw0rd",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "m97",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8081",
+			"type": "string"
+		}
+	]
+}
