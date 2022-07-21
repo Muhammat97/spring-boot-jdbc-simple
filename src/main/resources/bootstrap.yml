@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: cooperative
+  profiles:
+    active: dev
