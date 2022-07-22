@@ -9,6 +9,7 @@
 - Get all transactions (GET /transaction)
 - Get customer transactions (GET /{custUuid}/transaction)
 - Add transaction (POST /{custUuid}/transaction)
+- Etc
 
 ## Prerequisite
 
@@ -23,6 +24,20 @@ App will run on port 8081
     ./mvnw spring-boot:run
 
 ## Test
+
+### JUnit
+
+Test class: [CooperativeApplicationTests.java](src/test/java/com/m97/cooperative/CooperativeApplicationTests.java)
+
+Integration test class: [A1Tests.java](src/test/java/com/m97/cooperative/integrationtest/A1Tests.java)
+
+![JUnit Test](doc/image/JUnitTest.png "JUnit Test")
+
+    ./mvnw test
+
+With integration test
+
+    ./mvnw clean verify
 
 ### Postman
 
