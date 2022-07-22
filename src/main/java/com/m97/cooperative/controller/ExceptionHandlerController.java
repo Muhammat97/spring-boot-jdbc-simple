@@ -3,20 +3,42 @@ package com.m97.cooperative.controller;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.m97.cooperative.model.GenericModel;
 import com.m97.cooperative.model.exception.CustomRuntimeException;
 import com.m97.cooperative.util.ResponseUtil;
 
 @ControllerAdvice
-public class ExceptionHandlerController {
+public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
+
+	@Override
+	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		if (ex.getRootCause().getClass() == CustomRuntimeException.class)
+			return responseCustomRuntimeException((CustomRuntimeException) ex.getRootCause());
+
+		return super.handleHttpMessageNotReadable(ex, headers, status, request);
+	}
+
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		String[] defaultMessage = ex.getBindingResult().getFieldError().getDefaultMessage().split("\\|");
+
+		return processErrors(defaultMessage);
+	}
 
 	@ExceptionHandler(value = { ConstraintViolationException.class })
-	public ResponseEntity<Object> responseConstraintViolationException(ConstraintViolationException ex) {
+	protected ResponseEntity<Object> responseConstraintViolationException(ConstraintViolationException ex) {
 		String[] defaultMessage = new String[] { "E001" };
 		for (ConstraintViolation<?> constraintViolation : ex.getConstraintViolations()) {
 			defaultMessage = constraintViolation.getMessage().split("\\|");
@@ -27,15 +49,8 @@ public class ExceptionHandlerController {
 		return processErrors(defaultMessage);
 	}
 
-	@ExceptionHandler(value = { MethodArgumentNotValidException.class })
-	public ResponseEntity<Object> responseMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-		String[] defaultMessage = ex.getBindingResult().getFieldError().getDefaultMessage().split("\\|");
-
-		return processErrors(defaultMessage);
-	}
-
 	@ExceptionHandler(value = { CustomRuntimeException.class })
-	public ResponseEntity<Object> responseRuntimeException(CustomRuntimeException ex) {
+	protected ResponseEntity<Object> responseCustomRuntimeException(CustomRuntimeException ex) {
 		String[] defaultMessage = ex.getMessage().split("\\|");
 
 		return processErrors(defaultMessage);
