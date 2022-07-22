@@ -15,6 +15,7 @@ import com.m97.cooperative.util.CommonUtil;
 import com.m97.cooperative.util.CustomDateDeserializer;
 import com.m97.cooperative.util.CustomDateSerializer;
 import com.m97.cooperative.util.CustomTimestampSerializer;
+import com.m97.cooperative.util.annotation.ColumnName;
 
 public class CustomerModel {
 
@@ -23,29 +24,35 @@ public class CustomerModel {
 
 	private String custUuid;
 
+	@ColumnName("full_name")
 	@NotBlank(message = "E006|fullName")
 	@Size(min = 3, message = "E007|fullName|{min}")
 	@Size(max = 60, message = "E008|fullName|{max}")
 	private String fullName;
 
+	@ColumnName("identity_num")
 	@Size(max = 20, message = "E008|identityNum|{max}")
 	private String identityNum;
 
+	@ColumnName("birth_date")
 	@Past(message = "E014|birthDate|now")
 	@JsonDeserialize(using = CustomDateDeserializer.class)
 	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date birthDate;
 
+	@ColumnName("birth_place")
 	@Size(max = 40, message = "E008|birthPlace|{max}")
 	private String birthPlace;
 
 	@Size(max = 250, message = "E008|address|{max}")
 	private String address;
 
+	@ColumnName("neighbourhood_num")
 	@Pattern(regexp = CommonUtil.REGEX_ONLY_NUMBER, message = "E010|neighbourhoodNum")
 	@Size(max = 3, message = "E008|neighbourhoodNum|{max}")
 	private String neighbourhoodNum;
 
+	@ColumnName("hamlet_num")
 	@Pattern(regexp = CommonUtil.REGEX_ONLY_NUMBER, message = "E010|hamletNum")
 	@Size(max = 3, message = "E008|hamletNum|{max}")
 	private String hamletNum;
@@ -62,6 +69,7 @@ public class CustomerModel {
 	@Size(max = 40, message = "E008|province|{max}")
 	private String province;
 
+	@ColumnName("zip_code")
 	@Pattern(regexp = CommonUtil.REGEX_ONLY_NUMBER, message = "E010|zipCode")
 	@Size(min = 5, max = 5, message = "E009|zipCode|{max}")
 	private String zipCode;
@@ -74,6 +82,7 @@ public class CustomerModel {
 	@JsonSerialize(using = CustomTimestampSerializer.class)
 	private Timestamp updatedAt;
 
+	@ColumnName("updated_by")
 	private String updatedBy;
 
 	public CustomerModel() {

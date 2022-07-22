@@ -7,7 +7,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,10 +30,21 @@ public class CustomerController {
 		return customerService.getAllData();
 	}
 
+	@GetMapping(value = "/{custUuid}")
+	public ResponseEntity<Object> getDataById(@PathVariable String custUuid) {
+		return customerService.getDataById(custUuid);
+	}
+
 	@PostMapping(value = "/", consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Object> entryData(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String auth,
 			@RequestBody @Valid CustomerModel customerModel) {
 		return customerService.entryData(customerModel, auth);
+	}
+
+	@PutMapping(value = "/{custUuid}", consumes = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<Object> entryData(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String auth,
+			@PathVariable String custUuid, @RequestBody CustomerModel customerModel) {
+		return customerService.updateDataById(custUuid, customerModel, auth);
 	}
 
 }

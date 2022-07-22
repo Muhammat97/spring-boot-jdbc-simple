@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +41,24 @@ public class CustomerService {
 			else
 				genericModel.setCode("S001");
 			genericModel.setData(customerModels);
+		} catch (DataAccessException e) {
+			LOGGER.error("REPOSITORY", e);
+			genericModel.setCode("E002");
+		}
+
+		return ResponseUtil.setResponse(genericModel);
+	}
+
+	public ResponseEntity<Object> getDataById(String custUuid) {
+		GenericModel genericModel = new GenericModel();
+
+		try {
+			CustomerModel customerModel = customerRepository.getDataById(custUuid);
+
+			genericModel.setCode("S001");
+			genericModel.setData(customerModel);
+		} catch (IncorrectResultSizeDataAccessException e) {
+			genericModel.setCode("E003");
 		} catch (DataAccessException e) {
 			LOGGER.error("REPOSITORY", e);
 			genericModel.setCode("E002");
@@ -83,6 +102,30 @@ public class CustomerService {
 
 			customerAccountModel.setAcctName("LOAN");
 			customerAccountRepository.entryData(customerAccountModel);
+		}
+
+		return ResponseUtil.setResponse(genericModel);
+	}
+
+	public ResponseEntity<Object> updateDataById(String custUuid, CustomerModel customerModel, String auth) {
+		GenericModel genericModel = new GenericModel();
+
+		try {
+			customerModel.setUpdatedBy(CommonUtil.getUsernameByAuth(auth));
+
+			int rowsAffected = customerRepository.updateDataById(custUuid, customerModel);
+			if (rowsAffected > 0) {
+				genericModel.setCode("S004");
+				genericModel.setData(customerModel.getCustUuid());
+			} else {
+				genericModel.setCode("E002");
+			}
+		} catch (DataAccessException e) {
+			LOGGER.error("REPOSITORY", e);
+			genericModel.setCode("E002");
+		} catch (Exception e) {
+			LOGGER.error("SERVICE", e);
+			genericModel.setCode("E001");
 		}
 
 		return ResponseUtil.setResponse(genericModel);
