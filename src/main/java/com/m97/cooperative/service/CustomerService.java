@@ -15,9 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.m97.cooperative.model.CustomerAccountModel;
 import com.m97.cooperative.model.CustomerModel;
 import com.m97.cooperative.model.GenericModel;
+import com.m97.cooperative.model.TransactionModel;
 import com.m97.cooperative.repository.CustomerAccountRepository;
 import com.m97.cooperative.repository.CustomerRepository;
-import com.m97.cooperative.util.CommonUtil;
+import com.m97.cooperative.repository.TransactionRepository;
 import com.m97.cooperative.util.ResponseUtil;
 
 @Service
@@ -28,6 +29,9 @@ public class CustomerService {
 
 	@Autowired
 	private CustomerAccountRepository customerAccountRepository;
+
+	@Autowired
+	private TransactionRepository transactionRepository;
 
 	private static final Logger LOGGER = LogManager.getLogger();
 
@@ -55,6 +59,16 @@ public class CustomerService {
 		try {
 			CustomerModel customerModel = customerRepository.getDataById(custUuid);
 
+			if (customerModel != null) {
+				List<CustomerAccountModel> customerAccountModels = customerAccountRepository
+						.getDataByCustUuid(custUuid);
+				customerModel.setCustomerAccount(customerAccountModels);
+
+				List<Integer> listCustAcctId = customerAccountRepository.getCustAcctIdsByCustUuid(custUuid);
+				List<TransactionModel> transactionModels = transactionRepository.getDataByCustAcctIds(listCustAcctId);
+				customerModel.setTransaction(transactionModels);
+			}
+
 			genericModel.setCode("S001");
 			genericModel.setData(customerModel);
 		} catch (IncorrectResultSizeDataAccessException e) {
@@ -68,50 +82,47 @@ public class CustomerService {
 	}
 
 	@Transactional
-	public ResponseEntity<Object> entryData(CustomerModel customerModel, String auth) {
+	public ResponseEntity<Object> entryData(CustomerModel customerModel, String username) {
 		GenericModel genericModel = new GenericModel();
 
 		LOGGER.info(customerModel);
 
 		try {
 			customerModel.setCustUuid(UUID.randomUUID().toString());
-			customerModel.setCreatedBy(CommonUtil.getUsernameByAuth(auth));
+			customerModel.setCreatedBy(username);
 
 			int rowsAffected = customerRepository.entryData(customerModel);
-			if (rowsAffected > 0) {
-				genericModel.setCode("S003");
-				genericModel.setData(customerModel.getCustUuid());
-			} else {
+			if (rowsAffected < 1) {
 				genericModel.setCode("E002");
+				return ResponseUtil.setResponse(genericModel);
 			}
 		} catch (DataAccessException e) {
 			LOGGER.error("REPOSITORY", e);
 			genericModel.setCode("E002");
-		} catch (Exception e) {
-			LOGGER.error("SERVICE", e);
-			genericModel.setCode("E001");
+			return ResponseUtil.setResponse(genericModel);
 		}
 
-		if ("S003".equals(genericModel.getCode())) {
-			CustomerAccountModel customerAccountModel = new CustomerAccountModel();
-			customerAccountModel.setCustUuid(customerModel.getCustUuid());
-			customerAccountModel.setCreatedBy(customerModel.getCreatedBy());
+		CustomerAccountModel customerAccountModel = new CustomerAccountModel();
+		customerAccountModel.setCustUuid(customerModel.getCustUuid());
+		customerAccountModel.setCreatedBy(customerModel.getCreatedBy());
 
-			customerAccountModel.setAcctName("SAVINGS");
-			customerAccountRepository.entryData(customerAccountModel);
+		customerAccountModel.setAcctName("SAVINGS");
+		customerAccountRepository.entryData(customerAccountModel);
 
-			customerAccountModel.setAcctName("LOAN");
-			customerAccountRepository.entryData(customerAccountModel);
-		}
+		customerAccountModel.setAcctName("LOAN");
+		customerAccountRepository.entryData(customerAccountModel);
+
+		genericModel.setCode("S003");
+		genericModel.setData(customerModel.getCustUuid());
 
 		return ResponseUtil.setResponse(genericModel);
 	}
 
-	public ResponseEntity<Object> updateDataById(String custUuid, CustomerModel customerModel, String auth) {
+	public ResponseEntity<Object> updateDataById(String custUuid, CustomerModel customerModel, String username) {
 		GenericModel genericModel = new GenericModel();
 
 		try {
-			customerModel.setUpdatedBy(CommonUtil.getUsernameByAuth(auth));
+			customerModel.setUpdatedBy(username);
 
 			int rowsAffected = customerRepository.updateDataById(custUuid, customerModel);
 			if (rowsAffected > 0) {

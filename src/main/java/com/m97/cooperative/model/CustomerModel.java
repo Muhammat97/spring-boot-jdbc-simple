@@ -2,6 +2,7 @@ package com.m97.cooperative.model;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
@@ -84,6 +85,10 @@ public class CustomerModel {
 
 	@ColumnName("updated_by")
 	private String updatedBy;
+
+	private List<CustomerAccountModel> customerAccount;
+
+	private List<TransactionModel> transaction;
 
 	public CustomerModel() {
 		super();
@@ -234,6 +239,22 @@ public class CustomerModel {
 		this.updatedBy = updatedBy;
 	}
 
+	public List<CustomerAccountModel> getCustomerAccount() {
+		return customerAccount;
+	}
+
+	public void setCustomerAccount(List<CustomerAccountModel> customerAccount) {
+		this.customerAccount = customerAccount;
+	}
+
+	public List<TransactionModel> getTransaction() {
+		return transaction;
+	}
+
+	public void setTransaction(List<TransactionModel> transaction) {
+		this.transaction = transaction;
+	}
+
 	@Override
 	public String toString() {
 		return "CustomerModel [custId=" + custId + ", custUuid=" + custUuid + ", fullName=" + fullName
@@ -241,7 +262,8 @@ public class CustomerModel {
 				+ ", address=" + address + ", neighbourhoodNum=" + neighbourhoodNum + ", hamletNum=" + hamletNum
 				+ ", village=" + village + ", subdistrict=" + subdistrict + ", city=" + city + ", province=" + province
 				+ ", zipCode=" + zipCode + ", createdAt=" + createdAt + ", createdBy=" + createdBy + ", updatedAt="
-				+ updatedAt + ", updatedBy=" + updatedBy + "]";
+				+ updatedAt + ", updatedBy=" + updatedBy + ", customerAccount=" + customerAccount + ", transaction="
+				+ transaction + "]";
 	}
 
 }

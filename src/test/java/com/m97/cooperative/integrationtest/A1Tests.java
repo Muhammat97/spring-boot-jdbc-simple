@@ -47,8 +47,8 @@ class A1Tests {
 	static String custUuid;
 	static String tranUuid;
 
-	static final String pathCode = "$.code";
-	static final String pathOutput = "$.output";
+	static final String PATH_CODE = "$.code";
+	static final String PATH_OUTPUT = "$.output";
 
 	@BeforeAll
 	static void init() {
@@ -68,8 +68,8 @@ class A1Tests {
 		MvcResult result = mvc
 				.perform(post("/").header(HttpHeaders.AUTHORIZATION, basicAuth)
 						.contentType(MediaType.APPLICATION_JSON_VALUE).content(om.writeValueAsString(model)))
-				.andDo(log()).andExpect(status().isOk()).andExpect(jsonPath(pathCode).value("S003")).andReturn();
-		custUuid = JsonPath.read(result.getResponse().getContentAsString(), pathOutput);
+				.andDo(log()).andExpect(status().isOk()).andExpect(jsonPath(PATH_CODE).value("S003")).andReturn();
+		custUuid = JsonPath.read(result.getResponse().getContentAsString(), PATH_OUTPUT);
 		assertThat(custUuid).hasSize(36);
 	}
 
@@ -77,9 +77,9 @@ class A1Tests {
 	@Order(2)
 	void getAllCustomer() throws Exception {
 		mvc.perform(get("/").header(HttpHeaders.AUTHORIZATION, basicAuth)).andDo(log()).andExpect(status().isOk())
-				.andExpect(jsonPath(pathCode).value("S001"))
-				.andExpect(jsonPath(pathOutput.concat("[-1:].fullName")).value("Muhammat Amir Munajad"))
-				.andExpect(jsonPath(pathOutput.concat("[-1:].custUuid")).value(custUuid));
+				.andExpect(jsonPath(PATH_CODE).value("S001"))
+				.andExpect(jsonPath(PATH_OUTPUT.concat("[-1:].fullName")).value("Muhammat Amir Munajad"))
+				.andExpect(jsonPath(PATH_OUTPUT.concat("[-1:].custUuid")).value(custUuid));
 	}
 
 	@Test
@@ -92,8 +92,8 @@ class A1Tests {
 		MvcResult result = mvc
 				.perform(post("/".concat(custUuid).concat("/transaction")).header(HttpHeaders.AUTHORIZATION, basicAuth)
 						.contentType(MediaType.APPLICATION_JSON_VALUE).content(om.writeValueAsString(model)))
-				.andDo(log()).andExpect(status().isOk()).andExpect(jsonPath(pathCode).value("S003")).andReturn();
-		tranUuid = JsonPath.read(result.getResponse().getContentAsString(), pathOutput);
+				.andDo(log()).andExpect(status().isOk()).andExpect(jsonPath(PATH_CODE).value("S003")).andReturn();
+		tranUuid = JsonPath.read(result.getResponse().getContentAsString(), PATH_OUTPUT);
 		assertThat(tranUuid).hasSize(36);
 	}
 
@@ -101,24 +101,24 @@ class A1Tests {
 	@Order(4)
 	void getAllTransaction() throws Exception {
 		mvc.perform(get("/transaction").header(HttpHeaders.AUTHORIZATION, basicAuth)).andDo(log())
-				.andExpect(status().isOk()).andExpect(jsonPath(pathCode).value("S001"))
-				.andExpect(jsonPath(pathOutput.concat("[-1:].tranType")).value("DEPOSIT"))
-				.andExpect(jsonPath(pathOutput.concat("[-1:].tranUuid")).value(tranUuid));
+				.andExpect(status().isOk()).andExpect(jsonPath(PATH_CODE).value("S001"))
+				.andExpect(jsonPath(PATH_OUTPUT.concat("[-1:].tranType")).value("DEPOSIT"))
+				.andExpect(jsonPath(PATH_OUTPUT.concat("[-1:].tranUuid")).value(tranUuid));
 	}
 
 	@Test
 	@Order(5)
 	void getCustomerTransaction() throws Exception {
 		mvc.perform(get("/".concat(custUuid).concat("/transaction")).header(HttpHeaders.AUTHORIZATION, basicAuth))
-				.andDo(log()).andExpect(status().isOk()).andExpect(jsonPath(pathCode).value("S001"))
-				.andExpect(jsonPath(pathOutput.concat("[-1:].tranType")).value("DEPOSIT"))
-				.andExpect(jsonPath(pathOutput.concat("[-1:].tranUuid")).value(tranUuid));
+				.andDo(log()).andExpect(status().isOk()).andExpect(jsonPath(PATH_CODE).value("S001"))
+				.andExpect(jsonPath(PATH_OUTPUT.concat("[-1:].tranType")).value("DEPOSIT"))
+				.andExpect(jsonPath(PATH_OUTPUT.concat("[-1:].tranUuid")).value(tranUuid));
 	}
 
 	@Test
 	void nGetCustomerTransactionNotFound() throws Exception {
 		mvc.perform(get("/uuid-not-found/transaction").header(HttpHeaders.AUTHORIZATION, basicAuth)).andDo(log())
-				.andExpect(status().isNotFound()).andExpect(jsonPath(pathCode).value("E003"));
+				.andExpect(status().isNotFound()).andExpect(jsonPath(PATH_CODE).value("E003"));
 	}
 
 }

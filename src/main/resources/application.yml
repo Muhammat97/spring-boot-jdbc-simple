@@ -31,6 +31,7 @@ map-collection:
     E012: "400|{args1} value must have format {args2}."
     E013: "400|{args1} value must in range of {args2} - {args3}."
     E014: "400|{args1} cannot be later than {args2}."
+    E015: "400|Balance not enaugh."
 
 logging:
   level:

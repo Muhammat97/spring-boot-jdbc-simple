@@ -23,7 +23,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		if (ex.getRootCause().getClass() == CustomRuntimeException.class)
+		if (ex.getMostSpecificCause().getClass() == CustomRuntimeException.class)
 			return responseCustomRuntimeException((CustomRuntimeException) ex.getRootCause());
 
 		return super.handleHttpMessageNotReadable(ex, headers, status, request);

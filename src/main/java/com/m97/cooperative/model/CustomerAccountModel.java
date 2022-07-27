@@ -3,7 +3,10 @@ package com.m97.cooperative.model;
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+@JsonInclude(Include.NON_NULL)
 public class CustomerAccountModel {
 
 	@JsonIgnore
@@ -13,7 +16,7 @@ public class CustomerAccountModel {
 
 	private String acctName;
 
-	private BigDecimal balance;
+	private BigDecimal balance = new BigDecimal(0);
 
 	private String createdBy;
 

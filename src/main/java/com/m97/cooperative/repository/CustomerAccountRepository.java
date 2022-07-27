@@ -67,4 +67,16 @@ public class CustomerAccountRepository {
 		return jdbcTemplate.queryForObject(query, DataClassRowMapper.newInstance(CustomerAccountModel.class), values);
 	}
 
+	public List<CustomerAccountModel> getDataByCustUuid(String custUuid) {
+		String query = "SELECT (SELECT acct_name FROM test.acct WHERE acct_id = cust_acct.acct_id) AS acct_name, "
+				+ "balance FROM test.cust_acct "
+				+ "WHERE cust_id = (SELECT cust_id FROM test.cust WHERE cust_uuid = ?)";
+		LOGGER.debug(query);
+
+		Object[] values = new Object[] { custUuid };
+		LOGGER.debug(Arrays.toString(values));
+
+		return jdbcTemplate.query(query, DataClassRowMapper.newInstance(CustomerAccountModel.class), values);
+	}
+
 }

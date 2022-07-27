@@ -53,8 +53,8 @@ class CooperativeApplicationTests {
 
 	static String basicAuth;
 
-	static final String pathCode = "$.code";
-	static final String pathOutput = "$.output";
+	static final String PATH_CODE = "$.code";
+	static final String PATH_OUTPUT = "$.output";
 
 	@BeforeAll
 	void init() {
@@ -73,7 +73,7 @@ class CooperativeApplicationTests {
 
 		mvc.perform(post("/").header(HttpHeaders.AUTHORIZATION, basicAuth).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(om.writeValueAsString(model))).andDo(log()).andExpect(status().isBadRequest())
-				.andExpect(jsonPath(pathCode).value("E006"));
+				.andExpect(jsonPath(PATH_CODE).value("E006"));
 	}
 
 	@Test
@@ -87,7 +87,7 @@ class CooperativeApplicationTests {
 
 		mvc.perform(post("/").header(HttpHeaders.AUTHORIZATION, basicAuth).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(om.writeValueAsString(model))).andDo(log()).andExpect(status().isBadRequest())
-				.andExpect(jsonPath(pathCode).value("E007"));
+				.andExpect(jsonPath(PATH_CODE).value("E007"));
 	}
 
 	@Test
@@ -102,7 +102,7 @@ class CooperativeApplicationTests {
 
 		mvc.perform(post("/").header(HttpHeaders.AUTHORIZATION, basicAuth).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(om.writeValueAsString(model))).andDo(log()).andExpect(status().isBadRequest())
-				.andExpect(jsonPath(pathCode).value("E008"));
+				.andExpect(jsonPath(PATH_CODE).value("E008"));
 	}
 
 	@Test
@@ -116,7 +116,7 @@ class CooperativeApplicationTests {
 
 		mvc.perform(post("/").header(HttpHeaders.AUTHORIZATION, basicAuth).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(om.writeValueAsString(model))).andDo(log()).andExpect(status().isBadRequest())
-				.andExpect(jsonPath(pathCode).value("E014"));
+				.andExpect(jsonPath(PATH_CODE).value("E014"));
 	}
 
 	@Test
@@ -130,7 +130,7 @@ class CooperativeApplicationTests {
 
 		mvc.perform(post("/").header(HttpHeaders.AUTHORIZATION, basicAuth).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(om.writeValueAsString(model))).andDo(log()).andExpect(status().isBadRequest())
-				.andExpect(jsonPath(pathCode).value("E010"));
+				.andExpect(jsonPath(PATH_CODE).value("E010"));
 	}
 
 	@Test
@@ -139,7 +139,7 @@ class CooperativeApplicationTests {
 		requestParams.add("startDate", "2022-07-07");
 		requestParams.add("endDate", "2022-01-01");
 		mvc.perform(get("/transaction").queryParams(requestParams).header(HttpHeaders.AUTHORIZATION, basicAuth))
-				.andDo(log()).andExpect(status().isBadRequest()).andExpect(jsonPath(pathCode).value("E014"));
+				.andDo(log()).andExpect(status().isBadRequest()).andExpect(jsonPath(PATH_CODE).value("E014"));
 	}
 
 	@Test
@@ -150,7 +150,7 @@ class CooperativeApplicationTests {
 
 		mvc.perform(post("/uuid/transaction").header(HttpHeaders.AUTHORIZATION, basicAuth)
 				.contentType(MediaType.APPLICATION_JSON_VALUE).content(om.writeValueAsString(model))).andDo(log())
-				.andExpect(status().isBadRequest()).andExpect(jsonPath(pathCode).value("E013"));
+				.andExpect(status().isBadRequest()).andExpect(jsonPath(PATH_CODE).value("E013"));
 	}
 
 	@Test
@@ -161,7 +161,7 @@ class CooperativeApplicationTests {
 
 		mvc.perform(post("/uuid/transaction").header(HttpHeaders.AUTHORIZATION, basicAuth)
 				.contentType(MediaType.APPLICATION_JSON_VALUE).content(om.writeValueAsString(model))).andDo(log())
-				.andExpect(status().isBadRequest()).andExpect(jsonPath(pathCode).value("E011"));
+				.andExpect(status().isBadRequest()).andExpect(jsonPath(PATH_CODE).value("E011"));
 	}
 
 }

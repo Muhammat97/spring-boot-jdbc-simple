@@ -103,17 +103,18 @@ public class TransactionService {
 		GenericModel genericModel = new GenericModel();
 
 		try {
-			List<Integer> custAcctids = customerAccountRepository.getCustAcctIdsByCustUuid(custUuid);
-			if (custAcctids.isEmpty()) {
+			List<Integer> custAcctIds = customerAccountRepository.getCustAcctIdsByCustUuid(custUuid);
+			if (custAcctIds.isEmpty()) {
 				genericModel.setCode("E003");
-			} else {
-				List<TransactionModel> transactionModels = transactionRepository.getDataByCustAcctIds(custAcctids);
-				if (transactionModels.isEmpty())
-					genericModel.setCode("S002");
-				else
-					genericModel.setCode("S001");
-				genericModel.setData(transactionModels);
+				return ResponseUtil.setResponse(genericModel);
 			}
+
+			List<TransactionModel> transactionModels = transactionRepository.getDataByCustAcctIds(custAcctIds);
+			if (transactionModels.isEmpty())
+				genericModel.setCode("S002");
+			else
+				genericModel.setCode("S001");
+			genericModel.setData(transactionModels);
 		} catch (DataAccessException e) {
 			LOGGER.error("REPOSITORY", e);
 			genericModel.setCode("E002");
@@ -123,7 +124,7 @@ public class TransactionService {
 	}
 
 	@Transactional
-	public ResponseEntity<Object> entryData(String custUuid, TransactionModel model, String auth) {
+	public ResponseEntity<Object> entryData(String custUuid, TransactionModel model, String username) {
 		GenericModel genericModel = new GenericModel();
 
 		LOGGER.info(model);
@@ -134,50 +135,56 @@ public class TransactionService {
 					mapCollectionProps.getTransactionType().get(model.getTranType()));
 		} catch (IncorrectResultSizeDataAccessException e) {
 			genericModel.setCode("E003");
+			return ResponseUtil.setResponse(genericModel);
 		} catch (DataAccessException e) {
 			LOGGER.error("REPOSITORY", e);
 			genericModel.setCode("E002");
+			return ResponseUtil.setResponse(genericModel);
 		}
 
 		if (customerAccountModel == null) {
 			genericModel.setCode("E003");
-		} else {
-			try {
-				model.setTranUuid(UUID.randomUUID().toString());
-				model.setCreatedBy(CommonUtil.getUsernameByAuth(auth));
-				model.setCustAcctId(customerAccountModel.getCustAcctId());
-
-				int rowsAffected = transactionRepository.entryData(model);
-				if (rowsAffected > 0) {
-					genericModel.setCode("S003");
-					genericModel.setData(model.getTranUuid());
-				} else {
-					genericModel.setCode("E002");
-				}
-			} catch (DataAccessException e) {
-				LOGGER.error("REPOSITORY", e);
-				genericModel.setCode("E002");
-			} catch (Exception e) {
-				LOGGER.error("SERVICE", e);
-				genericModel.setCode("E001");
-			}
-
-			if ("S003".equals(genericModel.getCode())) {
-				BigDecimal amount = model.getTranAmount();
-				if ("WITHDRAWAL".equals(model.getTranType()) || "REFUND".equals(model.getTranType()))
-					amount.negate();
-
-				customerAccountModel.setBalance(
-						customerAccountModel.getBalance() != null ? customerAccountModel.getBalance().add(amount)
-								: amount);
-				customerAccountModel.setUpdatedBy(model.getCreatedBy());
-
-				int rowsAffected = customerAccountRepository.updateBalanceById(customerAccountModel.getCustAcctId(),
-						customerAccountModel);
-				if (rowsAffected < 1)
-					throw new CustomRuntimeException("E002");
-			}
+			return ResponseUtil.setResponse(genericModel);
 		}
+
+		try {
+			model.setTranUuid(UUID.randomUUID().toString());
+			model.setCreatedBy(username);
+			model.setCustAcctId(customerAccountModel.getCustAcctId());
+
+			int rowsAffected = transactionRepository.entryData(model);
+			if (rowsAffected < 1) {
+				genericModel.setCode("E002");
+				return ResponseUtil.setResponse(genericModel);
+			}
+		} catch (DataAccessException e) {
+			LOGGER.error("REPOSITORY", e);
+			genericModel.setCode("E002");
+			return ResponseUtil.setResponse(genericModel);
+		} catch (Exception e) {
+			LOGGER.error("SERVICE", e);
+			genericModel.setCode("E001");
+			return ResponseUtil.setResponse(genericModel);
+		}
+
+		BigDecimal amount = model.getTranAmount();
+		if ("WITHDRAWAL".equals(model.getTranType()) || "REFUND".equals(model.getTranType()))
+			amount = amount.negate();
+
+		BigDecimal balance = customerAccountModel.getBalance().add(amount);
+		if (balance.compareTo(new BigDecimal(0)) == -1)
+			throw new CustomRuntimeException("E015");
+
+		customerAccountModel.setBalance(balance);
+		customerAccountModel.setUpdatedBy(model.getCreatedBy());
+
+		int rowsAffected = customerAccountRepository.updateBalanceById(customerAccountModel.getCustAcctId(),
+				customerAccountModel);
+		if (rowsAffected < 1)
+			throw new CustomRuntimeException("E002");
+
+		genericModel.setCode("S003");
+		genericModel.setData(model.getTranUuid());
 
 		return ResponseUtil.setResponse(genericModel);
 	}

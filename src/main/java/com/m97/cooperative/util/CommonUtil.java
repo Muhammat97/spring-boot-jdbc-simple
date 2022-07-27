@@ -1,7 +1,6 @@
 package com.m97.cooperative.util;
 
 import java.lang.reflect.Field;
-import java.util.Base64;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,12 +17,6 @@ public class CommonUtil {
 	public static final String PATTERN_TIMESTAMP = "yyyy-MM-dd'T'HH:mm:ss";
 
 	public static final TimeZone TIME_ZONE = TimeZone.getTimeZone("GMT+7");
-
-	public static String getUsernameByAuth(String auth) {
-		auth = auth.replaceAll("(?i)Basic\\s+", "");
-		String decoded = new String(Base64.getDecoder().decode(auth));
-		return decoded.split(":")[0];
-	}
 
 	@SuppressWarnings("unchecked")
 	public static Object[] queryAndParamUpdateGenerator(String tableName, String nameUpdateBy, Object valueUpdateBy,
