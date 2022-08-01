@@ -16,6 +16,8 @@ public class CustomerAccountModel {
 
 	private String acctName;
 
+	private String currency;
+
 	private BigDecimal balance = new BigDecimal(0);
 
 	private String createdBy;
@@ -51,6 +53,14 @@ public class CustomerAccountModel {
 		this.acctName = acctName;
 	}
 
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+
 	public BigDecimal getBalance() {
 		return balance;
 	}
@@ -77,8 +87,9 @@ public class CustomerAccountModel {
 
 	@Override
 	public String toString() {
-		return "CustomerAccountModel [custAcctid=" + custAcctId + ", custUuid=" + custUuid + ", acctName=" + acctName
-				+ ", balance=" + balance + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy + "]";
+		return "CustomerAccountModel [custAcctId=" + custAcctId + ", custUuid=" + custUuid + ", acctName=" + acctName
+				+ ", currency=" + currency + ", balance=" + balance + ", createdBy=" + createdBy + ", updatedBy="
+				+ updatedBy + "]";
 	}
 
 }

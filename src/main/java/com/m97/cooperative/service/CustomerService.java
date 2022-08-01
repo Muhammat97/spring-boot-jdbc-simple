@@ -62,11 +62,11 @@ public class CustomerService {
 			if (customerModel != null) {
 				List<CustomerAccountModel> customerAccountModels = customerAccountRepository
 						.getDataByCustUuid(custUuid);
-				customerModel.setCustomerAccount(customerAccountModels);
+				customerModel.setCustomerAccountModels(customerAccountModels);
 
 				List<Integer> listCustAcctId = customerAccountRepository.getCustAcctIdsByCustUuid(custUuid);
 				List<TransactionModel> transactionModels = transactionRepository.getDataByCustAcctIds(listCustAcctId);
-				customerModel.setTransaction(transactionModels);
+				customerModel.setTransactionModels(transactionModels);
 			}
 
 			genericModel.setCode("S001");

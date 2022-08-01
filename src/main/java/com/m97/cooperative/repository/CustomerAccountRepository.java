@@ -68,9 +68,9 @@ public class CustomerAccountRepository {
 	}
 
 	public List<CustomerAccountModel> getDataByCustUuid(String custUuid) {
-		String query = "SELECT (SELECT acct_name FROM test.acct WHERE acct_id = cust_acct.acct_id) AS acct_name, "
-				+ "balance FROM test.cust_acct "
-				+ "WHERE cust_id = (SELECT cust_id FROM test.cust WHERE cust_uuid = ?)";
+		String query = "SELECT acct_name, currency, balance FROM test.cust_acct ca "
+				+ "LEFT JOIN test.acct a ON ca.acct_id = a.acct_id "
+				+ "LEFT JOIN test.cust c ON ca.cust_id = c.cust_id " + "WHERE cust_uuid = ? ORDER BY cust_acct_id";
 		LOGGER.debug(query);
 
 		Object[] values = new Object[] { custUuid };

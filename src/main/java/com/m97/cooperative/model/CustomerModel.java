@@ -10,6 +10,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.m97.cooperative.util.CommonUtil;
@@ -86,9 +87,11 @@ public class CustomerModel {
 	@ColumnName("updated_by")
 	private String updatedBy;
 
-	private List<CustomerAccountModel> customerAccount;
+	@JsonProperty("account")
+	private List<CustomerAccountModel> customerAccountModels;
 
-	private List<TransactionModel> transaction;
+	@JsonProperty("transaction")
+	private List<TransactionModel> transactionModels;
 
 	public CustomerModel() {
 		super();
@@ -239,20 +242,20 @@ public class CustomerModel {
 		this.updatedBy = updatedBy;
 	}
 
-	public List<CustomerAccountModel> getCustomerAccount() {
-		return customerAccount;
+	public List<CustomerAccountModel> getCustomerAccountModels() {
+		return customerAccountModels;
 	}
 
-	public void setCustomerAccount(List<CustomerAccountModel> customerAccount) {
-		this.customerAccount = customerAccount;
+	public void setCustomerAccountModels(List<CustomerAccountModel> customerAccountModels) {
+		this.customerAccountModels = customerAccountModels;
 	}
 
-	public List<TransactionModel> getTransaction() {
-		return transaction;
+	public List<TransactionModel> getTransactionModels() {
+		return transactionModels;
 	}
 
-	public void setTransaction(List<TransactionModel> transaction) {
-		this.transaction = transaction;
+	public void setTransactionModels(List<TransactionModel> transactionModels) {
+		this.transactionModels = transactionModels;
 	}
 
 	@Override
@@ -262,8 +265,8 @@ public class CustomerModel {
 				+ ", address=" + address + ", neighbourhoodNum=" + neighbourhoodNum + ", hamletNum=" + hamletNum
 				+ ", village=" + village + ", subdistrict=" + subdistrict + ", city=" + city + ", province=" + province
 				+ ", zipCode=" + zipCode + ", createdAt=" + createdAt + ", createdBy=" + createdBy + ", updatedAt="
-				+ updatedAt + ", updatedBy=" + updatedBy + ", customerAccount=" + customerAccount + ", transaction="
-				+ transaction + "]";
+				+ updatedAt + ", updatedBy=" + updatedBy + ", customerAccountModels=" + customerAccountModels
+				+ ", transactionModels=" + transactionModels + "]";
 	}
 
 }

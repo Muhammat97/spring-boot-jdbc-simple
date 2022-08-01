@@ -161,10 +161,6 @@ public class TransactionService {
 			LOGGER.error("REPOSITORY", e);
 			genericModel.setCode("E002");
 			return ResponseUtil.setResponse(genericModel);
-		} catch (Exception e) {
-			LOGGER.error("SERVICE", e);
-			genericModel.setCode("E001");
-			return ResponseUtil.setResponse(genericModel);
 		}
 
 		BigDecimal amount = model.getTranAmount();
